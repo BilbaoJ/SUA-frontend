@@ -24,7 +24,7 @@
     <button
       @click="showForm"
       type="button"
-      class="flex gap-0 items-center fixed right-4 bottom-20 md:right-2 md:bottom-2 shadow-2xl z-30 text-primary cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-200"
+      class="flex gap-0 items-center fixed right-4 bottom-20 md:right-2 md:bottom-2 lg:right-20 lg:bottom-10 shadow-2xl z-30 text-primary cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-200"
     >
       <Icon icon="icon-park-solid:add" width="53" height="53" />
     </button>

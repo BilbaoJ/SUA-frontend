@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col relative w-full md:w-80 min-h-36 px-10 py-8 items-center rounded-xl border border-accent bg-white shadow-xl z-10 cursor-pointer"
+    class="flex flex-col relative w-full md:w-80 min-h-36 px-10 py-8 items-center rounded-xl border border-accent bg-white shadow-xl z-10 cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 duration-300"
   >
     <h2 class="mb-2 text-lg font-semibold uppercase text-primary">{{ props.post.title }}</h2>
     <hr class="h-px my-2 w-11/12 bg-light border-0" />

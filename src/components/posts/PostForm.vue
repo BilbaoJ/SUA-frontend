@@ -6,7 +6,7 @@
     >
       <Icon
         @click="$emit('close')"
-        class="absolute top-4 right-4 text-primary"
+        class="absolute top-4 right-4 text-primary cursor-pointer"
         icon="lets-icons:close-round"
         width="24"
         height="24"

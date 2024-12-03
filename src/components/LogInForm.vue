@@ -1,15 +1,15 @@
 <template>
-  <main class="flex flex-col w-full max-w-md px-4 md:w-1/2 md:justify-center md:px-8">
+  <main class="flex flex-col gap-y-2 w-full max-w-md px-4 md:w-1/2 md:justify-center md:px-8">
     <h1 class="text-3xl font-semibold text-primary">Login</h1>
-    <p class="text-sm font-normal text-secondary">Please sign in to continue</p>
-    <form @submit.prevent="logIn()" class="flex flex-col gap-y-4 w-full h-fit mt-2">
+    <p class="text-base font-normal text-secondary">Please sign in to continue</p>
+    <form @submit.prevent="logIn()" class="flex flex-col gap-y-6 w-full h-fit mt-2">
       <div class="flex flex-col gap-y-1 w-full">
-        <label class="px-1 text-sm font-medium text-primary" for="user_email">Email</label>
+        <label class="px-1 text-base font-medium text-primary" for="user_email">Email</label>
         <div class="flex items-center px-4 rounded-full text-sm text-primary bg-light">
           <Icon icon="uil:user" />
           <input
             v-model="user.email"
-            class="w-full ml-2 text-sm bg-light border-none focus:ring-0"
+            class="w-full ml-2 text-base bg-light border-none focus:ring-0"
             id="user_email"
             name="user_email"
             type="email"
@@ -18,12 +18,12 @@
         </div>
       </div>
       <div class="flex flex-col gap-y-1 w-full">
-        <label class="px-1 text-sm font-medium text-primary" for="user_password">Password</label>
+        <label class="px-1 text-base font-medium text-primary" for="user_password">Password</label>
         <div class="flex items-center px-4 rounded-full text-sm text-primary bg-light">
           <Icon icon="tabler:lock" />
           <input
             v-model="user.password"
-            class="w-full ml-2 text-sm bg-light border-none focus:ring-0"
+            class="w-full ml-2 text-base bg-light border-none focus:ring-0"
             id="user_password"
             name="user_password"
             type="password"
@@ -31,7 +31,10 @@
         </div>
       </div>
       <div class="w-full">
-        <button type="submit" class="w-full px-2 py-1 rounded-full text-sm text-white bg-primary">
+        <button
+          type="submit"
+          class="w-full px-2 py-1 rounded-full text-sm font-bold text-white bg-primary hover:bg-accent hover:text-primary"
+        >
           Sign in
         </button>
       </div>
