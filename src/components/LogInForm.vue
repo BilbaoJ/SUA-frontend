@@ -39,8 +39,11 @@
   </main>
 </template>
 <script setup lang="ts">
-import common from '@/stores/commonStore'
+import { login } from '@/services/authService'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
+
+const store = useAuthStore()
 
 const router = useRouter()
 const user = {
@@ -50,20 +53,21 @@ const user = {
 
 const logIn = async () => {
   try {
-    const response: any = await common.login(user)
+    const response = await login(user)
     if (response) {
       if (response.ok) {
         const token = response.info.token
         const userName = response.info.name
         localStorage.setItem('token', token)
         localStorage.setItem('user', userName)
+        store.isAuthenticated = true
         router.push('/posts')
       } else {
         alert(response.message)
       }
     }
-  } catch (error: any) {
-    alert('Unexpected error')
+  } catch (error) {
+    alert('Unexpected error ' + error)
   }
 }
 </script>
