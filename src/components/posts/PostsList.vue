@@ -6,7 +6,20 @@
     <div
       class="flex flex-col gap-y-8 w-full h-fit px-4 mt-4 mb-24 md:flex-row md:gap-x-8 md:flex-wrap md:justify-center"
     >
-      <PostCard v-for="post in store.posts" v-bind:key="post.id" :post="post" />
+      <div
+        class="relative cursor-pointer"
+        @click="editPost(post)"
+        v-for="post in store.posts"
+        v-bind:key="post.id"
+      >
+        <button
+          @click.stop="deleteOnePost(post)"
+          class="absolute -top-2 -right-3 text-accent bg-primary p-2 rounded-full hover:text-secondary z-20"
+        >
+          <Icon icon="iconoir:trash-solid" width="20" height="20" />
+        </button>
+        <PostCard :post="post" />
+      </div>
     </div>
     <button
       @click="showForm"
@@ -15,22 +28,31 @@
     >
       <Icon icon="icon-park-solid:add" width="53" height="53" />
     </button>
-
-    <PostForm v-if="isFormVisible" @close="closeForm"></PostForm>
+    <PostForm v-if="isFormVisible" @close="closeForm" :post="selectedPost"></PostForm>
   </main>
 </template>
 <script setup lang="ts">
 import PostCard from './PostCard.vue'
 import PostForm from './PostForm.vue'
 import { onBeforeMount, ref } from 'vue'
-import { getPosts } from '@/services/postsService'
+import { deletePost, getPosts } from '@/services/postsService'
 import { ResponseTypes } from '@/models/enums/responseTypes'
 import { usePostsStore } from '@/stores/postsStore'
-import router from '@/router'
+import type { Post } from '@/models/post'
+import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
 
 const store = usePostsStore()
-
+const router = useRouter()
 const isFormVisible = ref(false)
+const selectedPost = ref({})
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'bottom-start',
+  showConfirmButton: false,
+  timer: 3000,
+})
 
 onBeforeMount(async () => {
   await loadPosts()
@@ -46,29 +68,50 @@ const loadPosts = async () => {
           const reversedPosts = response.info.reverse()
           store.updatePosts(reversedPosts)
         } else {
-          console.log('Este es el error' + response.status)
-          alert(response.message)
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: response.message,
+          })
         }
       }
     } else {
-      alert('Not auteneicated')
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You are not logged in',
+      })
       router.push('/')
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     switch (error.status) {
       case ResponseTypes.UNAUTHORIZED: {
-        alert('Your session has expired')
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Your session has expired',
+        })
+        localStorage.clear()
         router.push('/')
         break
       }
       case ResponseTypes.BAD_REQUEST: {
-        alert('You are not logged in')
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'You are not logged in',
+        })
+        router.push('/')
         break
       }
 
       default:
-        alert('An unexpected error occurred')
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An unexpected error occurred',
+        })
         break
     }
   }
@@ -80,5 +123,86 @@ const showForm = () => {
 
 const closeForm = () => {
   isFormVisible.value = false
+  selectedPost.value = {}
+}
+
+const editPost = (post: Post) => {
+  selectedPost.value = post
+  showForm()
+}
+
+const deleteOnePost = async (post: Post) => {
+  isFormVisible.value = false
+  try {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#27374D',
+      cancelButtonColor: '#526D82',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const token: string | null = localStorage.getItem('token')
+        if (token) {
+          const response = await deletePost(token, post.id)
+          if (response) {
+            if (response.ok) {
+              Toast.fire({
+                icon: 'success',
+                title: 'Your post has been deleted.',
+              })
+              store.deletePost(post)
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: response.message,
+              })
+            }
+          }
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'You are not logged in',
+          })
+          router.push('/')
+        }
+      }
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    switch (error.status) {
+      case ResponseTypes.UNAUTHORIZED: {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Your session has expired',
+        })
+        localStorage.clear()
+        router.push('/')
+        break
+      }
+      case ResponseTypes.BAD_REQUEST: {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'You are not logged in',
+        })
+        router.push('/')
+        break
+      }
+
+      default:
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An unexpected error occurred',
+        })
+        break
+    }
+  }
 }
 </script>
