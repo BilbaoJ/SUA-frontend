@@ -1,5 +1,10 @@
+<script setup lang="ts">
+import HeaderComponent from '@/components/shared/HeaderComponent.vue'
+import List from '@/components/posts/PostsList.vue'
+</script>
 <template>
-  <div>
-    <h1>This is the posts page</h1>
+  <HeaderComponent />
+  <div class="flex flex-col bg-light">
+    <List />
   </div>
 </template>
