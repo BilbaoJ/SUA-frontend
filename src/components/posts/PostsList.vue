@@ -7,7 +7,7 @@
       class="flex flex-col gap-y-8 w-full h-fit px-4 mt-4 mb-24 md:flex-row md:gap-x-8 md:flex-wrap md:justify-center"
     >
       <div
-        class="relative cursor-pointer"
+        class="relative cursor-pointer text-wrap"
         @click="editPost(post)"
         v-for="post in store.posts"
         v-bind:key="post.id"
