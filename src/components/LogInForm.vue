@@ -33,7 +33,7 @@
       <div class="w-full">
         <button
           type="submit"
-          class="w-full px-2 py-1 rounded-full text-sm font-bold text-white bg-primary hover:bg-accent hover:text-primary"
+          class="w-full px-2 py-2 rounded-full text-base font-bold text-white bg-primary hover:bg-accent hover:text-primary"
         >
           Sign in
         </button>
